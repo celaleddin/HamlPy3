@@ -6,7 +6,9 @@ before the translation utility extracts tags from it.
 """
 
 try:
-    from django.utils.translation import trans_real
+    from django.utils.translation import (
+        trans_real, templatize
+    )
     _django_available = True
 except ImportError as e:
     _django_available = False
@@ -28,4 +30,4 @@ def decorate_templatize(func):
     return templatize
 
 if _django_available:
-    trans_real.templatize = decorate_templatize(trans_real.templatize)
+    trans_real.templatize = decorate_templatize(templatize)

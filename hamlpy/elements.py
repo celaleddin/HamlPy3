@@ -1,5 +1,6 @@
 import re
 import sys
+from collections import OrderedDict
 
 class Element(object):
     """contains the pieces of an element and can populate itself from haml element text"""
@@ -109,7 +110,7 @@ class Element(object):
         return ''.join(escaped)
 
     def _parse_attribute_dictionary(self, attribute_dict_string):
-        attributes_dict = {}
+        attributes_dict = OrderedDict()
         if (attribute_dict_string):
             attribute_dict_string = attribute_dict_string.replace('\n', ' ')
             try:
@@ -120,7 +121,8 @@ class Element(object):
                 # Put double quotes around key
                 attribute_dict_string = re.sub(self.ATTRIBUTE_REGEX, '\g<pre>"\g<key>":\g<val>', attribute_dict_string)
                 # Parse string as dictionary
-                attributes_dict = eval(attribute_dict_string)
+                unordered_attributes_dict = eval(attribute_dict_string)
+                attributes_dict = OrderedDict(sorted(unordered_attributes_dict.items(), key=lambda t: t[0]))
                 for k, v in list(attributes_dict.items()):
                     if k != 'id' and k != 'class':
                         if v is None:
